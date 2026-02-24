@@ -33,7 +33,7 @@ export default function IncomingCallBanner() {
   if (!incoming || !member) return null;
 
   return (
-    <div className="fixed left-1/2 top-20 z-[90] flex -translate-x-1/2 items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 shadow-2xl animate-in slide-in-from-top">
+    <div className="fixed left-1/2 top-20 z-90 flex -translate-x-1/2 items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 shadow-2xl animate-in slide-in-from-top">
       <div className="flex items-center gap-2">
         {incoming.type === "video" ? (
           <Video className="h-5 w-5 text-primary" />

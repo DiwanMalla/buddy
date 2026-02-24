@@ -14,41 +14,45 @@ const ICE_SERVERS: RTCConfiguration = {
   ],
 };
 
-interface CallModalProps {
-  callId: Id<"calls">;
-  memberId: string;
-  isInitiator: boolean;
-  callType: "audio" | "video";
+interface Props {
+  roomId: Id<"rooms">;
+  callerId: string;
+  callerName: string;
+  receiverId: string;
   partnerName: string;
+  callType: "audio" | "video";
   onClose: () => void;
 }
 
-export default function CallModal({
-  callId,
-  memberId,
-  callType,
+export default function OutgoingCallModal({
+  roomId,
+  callerId,
+  callerName,
+  receiverId,
   partnerName,
+  callType,
   onClose,
-}: CallModalProps) {
+}: Props) {
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const processedCandidatesRef = useRef(new Set<string>());
 
+  const [callId, setCallId] = useState<Id<"calls"> | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
 
-  const answerCallMut = useMutation(api.calls.answerCall);
+  const initiateCall = useMutation(api.calls.initiateCall);
   const addIceCandidateMut = useMutation(api.calls.addIceCandidate);
   const endCallMut = useMutation(api.calls.endCall);
 
-  const call = useQuery(api.calls.getCall, { callId });
-  const remoteCandidates = useQuery(api.calls.getIceCandidates, {
-    callId,
-    excludeFromId: memberId,
-  });
+  const call = useQuery(api.calls.getCall, callId ? { callId } : "skip");
+  const remoteCandidates = useQuery(
+    api.calls.getIceCandidates,
+    callId ? { callId, excludeFromId: callerId } : "skip"
+  );
 
   const cleanup = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -57,13 +61,11 @@ export default function CallModal({
     pcRef.current = null;
   }, []);
 
-  // Accept: get media, create PC, set remote offer, create answer, send to Convex
+  // Initialize: get media, create PC, create offer, send to Convex
   useEffect(() => {
-    if (!call?.offer) return;
-    const offerSdp = call.offer;
     let cancelled = false;
 
-    async function accept() {
+    async function init() {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
         video: callType === "video",
@@ -84,33 +86,48 @@ export default function CallModal({
         }
       };
 
-      pc.onicecandidate = (event) => {
-        if (event.candidate) {
-          addIceCandidateMut({
-            callId,
-            fromId: memberId,
-            candidate: JSON.stringify(event.candidate),
-          });
-        }
-      };
-
       pc.onconnectionstatechange = () => {
         setIsConnected(pc.connectionState === "connected");
       };
 
-      await pc.setRemoteDescription(
-        new RTCSessionDescription(JSON.parse(offerSdp))
-      );
-      const answer = await pc.createAnswer();
-      await pc.setLocalDescription(answer);
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
 
-      await answerCallMut({ callId, answer: JSON.stringify(answer) });
+      const id = await initiateCall({
+        roomId,
+        callerId,
+        callerName,
+        receiverId,
+        type: callType,
+        offer: JSON.stringify(offer),
+      });
+      if (cancelled) return;
+      setCallId(id);
+
+      pc.onicecandidate = (event) => {
+        if (event.candidate) {
+          addIceCandidateMut({
+            callId: id,
+            fromId: callerId,
+            candidate: JSON.stringify(event.candidate),
+          });
+        }
+      };
     }
 
-    accept();
+    init();
     return () => { cancelled = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [call?.offer]);
+  }, []);
+
+  // Handle answer from receiver
+  useEffect(() => {
+    if (!call?.answer || !pcRef.current) return;
+    const pc = pcRef.current;
+    if (pc.signalingState === "have-local-offer") {
+      pc.setRemoteDescription(new RTCSessionDescription(JSON.parse(call.answer)));
+    }
+  }, [call?.answer]);
 
   // Process remote ICE candidates
   useEffect(() => {
@@ -122,16 +139,16 @@ export default function CallModal({
     }
   }, [remoteCandidates]);
 
-  // Handle call ended
+  // Handle call ended/rejected
   useEffect(() => {
-    if (call?.status === "ended") {
+    if (call?.status === "ended" || call?.status === "rejected") {
       cleanup();
       onClose();
     }
   }, [call?.status, cleanup, onClose]);
 
   const handleEnd = async () => {
-    await endCallMut({ callId });
+    if (callId) await endCallMut({ callId });
     cleanup();
     onClose();
   };
@@ -146,14 +163,16 @@ export default function CallModal({
     setIsVideoOff((p) => !p);
   };
 
+  const statusText = isConnected
+    ? `In call with ${partnerName}`
+    : call?.status === "ringing"
+      ? `Calling ${partnerName}...`
+      : `Connecting to ${partnerName}...`;
+
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/80 backdrop-blur-sm">
       <div className="flex w-full max-w-3xl flex-col items-center gap-4 rounded-2xl bg-background p-4 shadow-2xl sm:p-6">
-        <h3 className="text-lg font-semibold">
-          {isConnected
-            ? `In call with ${partnerName}`
-            : `Connecting to ${partnerName}...`}
-        </h3>
+        <h3 className="text-lg font-semibold">{statusText}</h3>
 
         <div className="relative flex w-full gap-3">
           {callType === "video" ? (
@@ -189,7 +208,7 @@ export default function CallModal({
                 {partnerName[0]}
               </div>
               <p className="text-sm text-muted-foreground">
-                {isConnected ? "Audio call connected" : "Connecting..."}
+                {isConnected ? "Audio call connected" : "Ringing..."}
               </p>
               <video ref={remoteVideoRef} autoPlay playsInline className="hidden" />
               <video ref={localVideoRef} autoPlay playsInline muted className="hidden" />

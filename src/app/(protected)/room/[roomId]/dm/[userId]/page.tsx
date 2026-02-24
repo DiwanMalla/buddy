@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "../../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../../convex/_generated/dataModel";
 import DMMessageList from "@/components/chat/DMMessageList";
@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { User, StickyNote, Phone, Video } from "lucide-react";
 import { useCurrentRoomMember } from "@/hooks/useCurrentRoomMember";
-import CallModal from "@/components/call/CallModal";
+import OutgoingCallModal from "@/components/call/OutgoingCallModal";
 
 export default function DMPage() {
   const params = useParams();
@@ -26,44 +26,13 @@ export default function DMPage() {
   const partner = roomMembers?.find((m) => m.memberId === partnerId);
   const isSelf = member && member.memberId === partnerId;
 
-  const initiateCall = useMutation(api.calls.initiateCall);
-  const [activeCallId, setActiveCallId] = useState<Id<"calls"> | null>(null);
   const [activeCallType, setActiveCallType] = useState<"audio" | "video">("audio");
+  const [startingCall, setStartingCall] = useState(false);
 
-  const handleStartCall = async (type: "audio" | "video") => {
-    if (!member) return;
-
+  const handleStartCall = (type: "audio" | "video") => {
+    if (!member || startingCall) return;
     setActiveCallType(type);
-
-    const pc = new RTCPeerConnection({
-      iceServers: [
-        { urls: "stun:stun.l.google.com:19302" },
-        { urls: "stun:stun1.l.google.com:19302" },
-      ],
-    });
-
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: type === "video",
-    });
-    stream.getTracks().forEach((t) => pc.addTrack(t, stream));
-
-    const offer = await pc.createOffer();
-    await pc.setLocalDescription(offer);
-
-    pc.close();
-    stream.getTracks().forEach((t) => t.stop());
-
-    const callId = await initiateCall({
-      roomId,
-      callerId: member.memberId,
-      callerName: member.memberName,
-      receiverId: partnerId,
-      type,
-      offer: JSON.stringify(offer),
-    });
-
-    setActiveCallId(callId);
+    setStartingCall(true);
   };
 
   return (
@@ -113,14 +82,15 @@ export default function DMPage() {
         )}
       </div>
 
-      {activeCallId && member && (
-        <CallModal
-          callId={activeCallId}
-          memberId={member.memberId}
-          isInitiator={true}
-          callType={activeCallType}
+      {startingCall && member && (
+        <OutgoingCallModal
+          roomId={roomId}
+          callerId={member.memberId}
+          callerName={member.memberName}
+          receiverId={partnerId}
           partnerName={partner?.name ?? "User"}
-          onClose={() => setActiveCallId(null)}
+          callType={activeCallType}
+          onClose={() => setStartingCall(false)}
         />
       )}
 
