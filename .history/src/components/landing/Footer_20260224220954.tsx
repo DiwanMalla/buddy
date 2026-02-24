@@ -8,39 +8,22 @@ export default function Footer() {
         <div className="flex flex-col items-center justify-between gap-5 sm:flex-row">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-              <Users
-                aria-hidden="true"
-                className="h-4 w-4 text-primary-foreground"
-              />
+              <Users aria-hidden="true" className="h-4 w-4 text-primary-foreground" />
             </div>
             <div>
               <p className="text-base font-semibold">Buddy</p>
-              <p className="text-xs text-muted-foreground">
-                Real-time team collaboration
-              </p>
+              <p className="text-xs text-muted-foreground">Real-time team collaboration</p>
             </div>
           </div>
 
-          <nav
-            aria-label="Footer"
-            className="flex gap-6 text-sm text-muted-foreground"
-          >
-            <Link
-              href="/create-room"
-              className="transition-colors hover:text-foreground"
-            >
+          <nav aria-label="Footer" className="flex gap-6 text-sm text-muted-foreground">
+            <Link href="/create-room" className="transition-colors hover:text-foreground">
               Create Room
             </Link>
-            <Link
-              href="/join-room"
-              className="transition-colors hover:text-foreground"
-            >
+            <Link href="/join-room" className="transition-colors hover:text-foreground">
               Join Room
             </Link>
-            <Link
-              href="/sign-in"
-              className="transition-colors hover:text-foreground"
-            >
+            <Link href="/sign-in" className="transition-colors hover:text-foreground">
               Sign In
             </Link>
           </nav>

@@ -39,7 +39,7 @@ export default function CTA() {
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full border border-primary bg-white text-primary hover:bg-primary/10 hover:text-primary sm:w-auto focus-visible:ring-2 focus-visible:ring-primary"
+                className="w-full border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 sm:w-auto"
                 asChild
               >
                 <Link href="/join-room">

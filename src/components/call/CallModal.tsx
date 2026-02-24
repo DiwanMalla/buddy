@@ -147,18 +147,18 @@ export default function CallModal({
   };
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="flex w-full max-w-3xl flex-col items-center gap-4 rounded-2xl bg-background p-4 shadow-2xl sm:p-6">
-        <h3 className="text-lg font-semibold">
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black">
+      <div className="flex h-full w-full flex-col items-center justify-between bg-background sm:h-auto sm:max-h-[90vh] sm:max-w-3xl sm:rounded-2xl sm:shadow-2xl">
+        <h3 className="py-3 text-center text-lg font-semibold sm:py-4">
           {isConnected
             ? `In call with ${partnerName}`
             : `Connecting to ${partnerName}...`}
         </h3>
 
-        <div className="relative flex w-full gap-3">
+        <div className="relative flex flex-1 w-full min-h-0">
           {callType === "video" ? (
             <>
-              <div className="relative aspect-video flex-1 overflow-hidden rounded-xl bg-muted">
+              <div className="relative flex-1 overflow-hidden bg-muted sm:mx-4 sm:rounded-xl">
                 <video
                   ref={remoteVideoRef}
                   autoPlay
@@ -173,7 +173,7 @@ export default function CallModal({
                   </div>
                 )}
               </div>
-              <div className="absolute bottom-3 right-3 aspect-video w-32 overflow-hidden rounded-lg border-2 border-background shadow-lg sm:w-40">
+              <div className="absolute bottom-3 right-3 aspect-video w-24 overflow-hidden rounded-lg border-2 border-background shadow-lg sm:w-40">
                 <video
                   ref={localVideoRef}
                   autoPlay
@@ -184,7 +184,7 @@ export default function CallModal({
               </div>
             </>
           ) : (
-            <div className="flex w-full flex-col items-center gap-4 py-8">
+            <div className="flex w-full flex-col items-center justify-center gap-4 py-8">
               <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary/10 text-4xl font-bold text-primary">
                 {partnerName[0]}
               </div>
@@ -197,11 +197,11 @@ export default function CallModal({
           )}
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 py-4 sm:py-6">
           <Button
             variant={isMuted ? "destructive" : "secondary"}
             size="icon"
-            className="h-12 w-12 rounded-full"
+            className="h-14 w-14 rounded-full sm:h-12 sm:w-12"
             onClick={toggleMute}
           >
             {isMuted ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
@@ -210,7 +210,7 @@ export default function CallModal({
             <Button
               variant={isVideoOff ? "destructive" : "secondary"}
               size="icon"
-              className="h-12 w-12 rounded-full"
+              className="h-14 w-14 rounded-full sm:h-12 sm:w-12"
               onClick={toggleVideo}
             >
               {isVideoOff ? <VideoOff className="h-5 w-5" /> : <Video className="h-5 w-5" />}
@@ -219,7 +219,7 @@ export default function CallModal({
           <Button
             variant="destructive"
             size="icon"
-            className="h-12 w-12 rounded-full"
+            className="h-14 w-14 rounded-full sm:h-12 sm:w-12"
             onClick={handleEnd}
           >
             <PhoneOff className="h-5 w-5" />

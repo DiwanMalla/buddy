@@ -52,7 +52,7 @@ export default function DMInput({ roomId, receiverId }: Props) {
       await sendDM({
         roomId,
         receiverId,
-        content: content.trim() || (fileName ?? "Shared a file"),
+        content: content.trim() || "",
         type: file ? "file" : "text",
         fileId,
         fileName,

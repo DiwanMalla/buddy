@@ -2,14 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  Plus,
-  LogIn,
-  ShieldCheck,
-  MessagesSquare,
-  Lock,
-} from "lucide-react";
+import { ArrowRight, Plus, LogIn, ShieldCheck, MessagesSquare, Lock } from "lucide-react";
 
 export default function Hero() {
   return (
@@ -23,10 +16,7 @@ export default function Hero() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <div className="mb-6 inline-flex items-center rounded-full border border-border/60 bg-background/70 px-4 py-1.5 text-sm text-muted-foreground">
-            <ShieldCheck
-              aria-hidden="true"
-              className="mr-2 h-4 w-4 text-primary"
-            />
+            <ShieldCheck aria-hidden="true" className="mr-2 h-4 w-4 text-primary" />
             Secure, Real-Time Collaboration
           </div>
 
@@ -35,9 +25,8 @@ export default function Hero() {
           </h1>
 
           <p className="mt-6 text-lg leading-relaxed text-muted-foreground sm:text-xl">
-            Create private rooms, organize topics with channels, and chat with
-            your team instantly. Buddy keeps everything simple, fast, and
-            focused.
+            Create private rooms, organize topics with channels, and chat with your team instantly.
+            Buddy keeps everything simple, fast, and focused.
           </p>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -64,36 +53,24 @@ export default function Hero() {
           <div className="mt-10 grid gap-3 text-left sm:grid-cols-3">
             <div className="rounded-xl border border-border/50 bg-background/70 p-4">
               <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-md bg-primary/10">
-                <MessagesSquare
-                  aria-hidden="true"
-                  className="h-4 w-4 text-primary"
-                />
+                <MessagesSquare aria-hidden="true" className="h-4 w-4 text-primary" />
               </div>
               <p className="text-sm font-medium">Real-Time Messaging</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Instant updates across rooms and channels.
-              </p>
+              <p className="mt-1 text-xs text-muted-foreground">Instant updates across rooms and channels.</p>
             </div>
             <div className="rounded-xl border border-border/50 bg-background/70 p-4">
               <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-md bg-primary/10">
                 <Lock aria-hidden="true" className="h-4 w-4 text-primary" />
               </div>
               <p className="text-sm font-medium">Private by Default</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Invite codes and room passwords protect access.
-              </p>
+              <p className="mt-1 text-xs text-muted-foreground">Invite codes and room passwords protect access.</p>
             </div>
             <div className="rounded-xl border border-border/50 bg-background/70 p-4">
               <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-md bg-primary/10">
-                <ShieldCheck
-                  aria-hidden="true"
-                  className="h-4 w-4 text-primary"
-                />
+                <ShieldCheck aria-hidden="true" className="h-4 w-4 text-primary" />
               </div>
               <p className="text-sm font-medium">Built for Teams</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Admins, channels, and files in one flow.
-              </p>
+              <p className="mt-1 text-xs text-muted-foreground">Admins, channels, and files in one flow.</p>
             </div>
           </div>
         </div>

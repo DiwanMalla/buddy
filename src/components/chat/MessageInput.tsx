@@ -52,7 +52,7 @@ export default function MessageInput({ roomId, channelId }: Props) {
       await sendMessage({
         roomId,
         channelId,
-        content: content.trim() || (fileName ?? "Shared a file"),
+        content: content.trim() || "",
         type: file ? "file" : "text",
         fileId,
         fileName,

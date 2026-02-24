@@ -21,12 +21,12 @@ export default function Navbar() {
       if (isSignedIn && isInRoom) {
         e.preventDefault();
         const leave = window.confirm(
-          "You are currently in a room. Do you want to leave?",
+          "You are currently in a room. Do you want to leave?"
         );
         if (leave) router.push("/dashboard");
       }
     },
-    [isSignedIn, isInRoom, router],
+    [isSignedIn, isInRoom, router]
   );
 
   return (
@@ -95,11 +95,7 @@ export default function Navbar() {
             className="rounded-md p-1.5 transition-colors hover:bg-muted"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
-            {mobileOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
+            {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       </div>

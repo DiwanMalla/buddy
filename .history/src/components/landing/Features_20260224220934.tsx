@@ -1,4 +1,11 @@
-import { MessageSquare, Shield, Users, Hash, FileUp, Zap } from "lucide-react";
+import {
+  MessageSquare,
+  Shield,
+  Users,
+  Hash,
+  FileUp,
+  Zap,
+} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 const features = [
@@ -45,9 +52,7 @@ export default function Features() {
     <section className="border-y border-border/40 bg-muted/20 py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="mb-3 text-sm font-medium text-primary">
-            Why Teams Choose Buddy
-          </p>
+          <p className="mb-3 text-sm font-medium text-primary">Why Teams Choose Buddy</p>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             All the Essentials for Productive Collaboration
           </h2>
@@ -65,10 +70,7 @@ export default function Features() {
               <CardContent className="pt-6">
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10">
-                    <feature.icon
-                      aria-hidden="true"
-                      className="h-5 w-5 text-primary"
-                    />
+                    <feature.icon aria-hidden="true" className="h-5 w-5 text-primary" />
                   </div>
                   <span className="text-xs font-medium text-muted-foreground">
                     {String(index + 1).padStart(2, "0")}
