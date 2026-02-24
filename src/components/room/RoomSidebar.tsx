@@ -232,26 +232,34 @@ export default function RoomSidebar() {
             </button>
 
             {showMembers &&
-              roomMembers?.map((m) => (
-                <Link key={m.memberId} href={`/room/${roomId}/dm/${m.memberId}`}>
-                  <div className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors hover:bg-muted">
-                    <Avatar className="h-6 w-6">
-                      <AvatarFallback className="text-[10px]">
-                        {m.name[0] ?? "?"}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="truncate text-sm">{m.name}</span>
-                    {room?.createdBy === m.memberId && (
-                      <Badge
-                        variant="outline"
-                        className="ml-auto text-[10px] px-1 py-0"
-                      >
-                        Admin
-                      </Badge>
-                    )}
-                  </div>
-                </Link>
-              ))}
+              roomMembers?.map((m) => {
+                const isMe = member && m.memberId === member.memberId;
+                return (
+                  <Link key={m.memberId} href={`/room/${roomId}/dm/${m.memberId}`}>
+                    <div className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors hover:bg-muted">
+                      <Avatar className="h-6 w-6">
+                        <AvatarFallback className="text-[10px]">
+                          {m.name[0] ?? "?"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="truncate text-sm">
+                        {m.name}
+                        {isMe && (
+                          <span className="ml-1 text-xs text-muted-foreground">(You)</span>
+                        )}
+                      </span>
+                      {room?.createdBy === m.memberId && (
+                        <Badge
+                          variant="outline"
+                          className="ml-auto shrink-0 text-[10px] px-1 py-0"
+                        >
+                          Admin
+                        </Badge>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
           </div>
         </ScrollArea>
       </div>

@@ -14,6 +14,7 @@ export default defineSchema({
   rooms: defineTable({
     name: v.string(),
     description: v.optional(v.string()),
+    clerkOrgId: v.optional(v.string()),
     passwordHash: v.string(),
     inviteCode: v.string(),
     createdBy: v.string(),

@@ -50,6 +50,10 @@ export const getDirectMessages = query({
       )
       .collect();
 
+    if (myId === otherId) {
+      return sent.sort((a, b) => a._creationTime - b._creationTime);
+    }
+
     const received = await ctx.db
       .query("directMessages")
       .withIndex("by_room_and_participants", (q) =>
