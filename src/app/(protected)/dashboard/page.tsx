@@ -61,21 +61,21 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="mt-1 text-muted-foreground">
+          <h1 className="text-2xl font-bold sm:text-3xl">Dashboard</h1>
+          <p className="mt-1 text-sm text-muted-foreground sm:text-base">
             Welcome back, {user?.firstName ?? "User"}
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" asChild>
+          <Button variant="outline" size="sm" asChild className="sm:size-default">
             <Link href="/join-room">
               <LogIn className="mr-2 h-4 w-4" />
               Join Room
             </Link>
           </Button>
-          <Button asChild>
+          <Button size="sm" asChild className="sm:size-default">
             <Link href="/create-room">
               <Plus className="mr-2 h-4 w-4" />
               Create Room

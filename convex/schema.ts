@@ -65,4 +65,29 @@ export default defineSchema({
     description: v.optional(v.string()),
     createdBy: v.string(),
   }).index("by_room", ["roomId"]),
+
+  calls: defineTable({
+    roomId: v.id("rooms"),
+    callerId: v.string(),
+    callerName: v.string(),
+    receiverId: v.string(),
+    status: v.union(
+      v.literal("ringing"),
+      v.literal("accepted"),
+      v.literal("ended"),
+      v.literal("rejected"),
+    ),
+    type: v.union(v.literal("audio"), v.literal("video")),
+    offer: v.optional(v.string()),
+    answer: v.optional(v.string()),
+  })
+    .index("by_room", ["roomId"])
+    .index("by_receiver", ["receiverId", "status"])
+    .index("by_caller", ["callerId", "status"]),
+
+  iceCandidates: defineTable({
+    callId: v.id("calls"),
+    fromId: v.string(),
+    candidate: v.string(),
+  }).index("by_call", ["callId"]),
 });

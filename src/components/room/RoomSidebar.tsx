@@ -26,7 +26,11 @@ import CreateChannelDialog from "./CreateChannelDialog";
 import AdminPanel from "./AdminPanel";
 import { useCurrentRoomMember } from "@/hooks/useCurrentRoomMember";
 
-export default function RoomSidebar() {
+interface SidebarProps {
+  onNavigate?: () => void;
+}
+
+export default function RoomSidebar({ onNavigate }: SidebarProps = {}) {
   const params = useParams();
   const pathname = usePathname();
   const roomId = params.roomId as string;
@@ -67,7 +71,7 @@ export default function RoomSidebar() {
 
   return (
     <>
-      <div className="flex h-full w-64 flex-col border-r border-border/40 bg-muted/20">
+      <div className="flex h-full w-full flex-col border-r border-border/40 bg-muted/20 md:w-64">
         <div className="flex items-center justify-between border-b border-border/40 p-4">
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-sm font-semibold">
@@ -112,7 +116,7 @@ export default function RoomSidebar() {
         <ScrollArea className="flex-1">
           <div className="p-2">
             {/* Group Chat */}
-            <Link href={`/room/${roomId}`}>
+            <Link href={`/room/${roomId}`} onClick={onNavigate}>
               <div
                 className={cn(
                   "flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-muted",
@@ -159,6 +163,7 @@ export default function RoomSidebar() {
                 <Link
                   key={channel._id}
                   href={`/room/${roomId}/channel/${channel._id}`}
+                  onClick={onNavigate}
                 >
                   <div
                     className={cn(
@@ -195,6 +200,7 @@ export default function RoomSidebar() {
                   <Link
                     key={partnerId}
                     href={`/room/${roomId}/dm/${partnerId}`}
+                    onClick={onNavigate}
                   >
                     <div
                       className={cn(
@@ -235,7 +241,7 @@ export default function RoomSidebar() {
               roomMembers?.map((m) => {
                 const isMe = member && m.memberId === member.memberId;
                 return (
-                  <Link key={m.memberId} href={`/room/${roomId}/dm/${m.memberId}`}>
+                  <Link key={m.memberId} href={`/room/${roomId}/dm/${m.memberId}`} onClick={onNavigate}>
                     <div className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors hover:bg-muted">
                       <Avatar className="h-6 w-6">
                         <AvatarFallback className="text-[10px]">

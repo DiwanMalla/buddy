@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as calls from "../calls.js";
 import type * as channels from "../channels.js";
 import type * as directMessages from "../directMessages.js";
 import type * as files from "../files.js";
@@ -23,6 +24,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  calls: typeof calls;
   channels: typeof channels;
   directMessages: typeof directMessages;
   files: typeof files;
